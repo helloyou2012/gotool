@@ -10,10 +10,10 @@ const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center space-x-2">
               <Laptop className="h-6 w-6 text-primary-500" />
-              <span className="font-semibold text-lg">DevToolkit</span>
+              <span className="font-semibold text-lg">GoTool</span>
             </Link>
             <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-              A comprehensive collection of tools for frontend developers to streamline their workflow.
+              A comprehensive collection of tools for developers to streamline their workflow.
             </p>
           </div>
           
@@ -85,7 +85,7 @@ const Footer: React.FC = () => {
         
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            © {new Date().getFullYear()} DevToolkit. All rights reserved.
+            © {new Date().getFullYear()} GoTool. All rights reserved.
           </p>
           
           <div className="flex space-x-4">

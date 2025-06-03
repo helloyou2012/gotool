@@ -124,6 +124,14 @@ export const tools: ToolData[] = [
     popular: true
   },
   {
+    id: 'yaml-json',
+    title: 'YAML to JSON Converter',
+    description: 'Convert between YAML and JSON formats',
+    category: 'code',
+    icon: 'FileJson',
+    new: true
+  },
+  {
     id: 'js-beautifier',
     title: 'JavaScript Beautifier',
     description: 'Format and beautify JavaScript code',

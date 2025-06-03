@@ -47,10 +47,10 @@ const HomePage: React.FC = () => {
       <section className="py-8 md:py-12 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary-500 to-accent-500 text-white rounded-lg">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Frontend Developer Tools
+            Developer Tools
           </h1>
           <p className="text-lg md:text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            A collection of essential tools to make frontend development faster and easier
+            A collection of essential tools to make development faster and easier
           </p>
           
           {/* Search Box */}

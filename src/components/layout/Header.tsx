@@ -47,7 +47,7 @@ const Header: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <Laptop className="h-6 w-6 text-primary-500" />
-            <span className="font-semibold text-lg">DevToolkit</span>
+            <span className="font-semibold text-lg">GoTool</span>
           </Link>
           
           {/* Desktop Navigation */}

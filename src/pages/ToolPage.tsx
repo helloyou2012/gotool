@@ -9,6 +9,7 @@ import ColorPickerTool from '../tools/ColorPickerTool';
 import JsonFormatterTool from '../tools/JsonFormatterTool';
 import BoxShadowTool from '../tools/BoxShadowTool';
 import GradientGeneratorTool from '../tools/GradientGeneratorTool';
+import YamlJsonTool from '../tools/YamlJsonTool';
 
 const ToolPage: React.FC = () => {
   const { toolId } = useParams<{ toolId: string }>();
@@ -50,6 +51,8 @@ const ToolPage: React.FC = () => {
         return <BoxShadowTool />;
       case 'gradient-generator':
         return <GradientGeneratorTool />;
+      case 'yaml-json':
+        return <YamlJsonTool />;
       default:
         return (
           <div className="text-center py-12">

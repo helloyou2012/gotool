@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { Copy, Check, Trash2, Upload } from 'lucide-react';
+import { Copy, Check, Trash2, Upload, ListTree, Code } from 'lucide-react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { jsonrepair } from 'jsonrepair';
 import json from 'react-syntax-highlighter/dist/esm/languages/hljs/json';
 import lightStyle from 'react-syntax-highlighter/dist/esm/styles/hljs/atom-one-light';
 import darkStyle from 'react-syntax-highlighter/dist/esm/styles/hljs/atom-one-dark';
 import { toast } from '../components/ui/Toaster';
 import { useThemeStore } from '../store/themeStore';
+import { JsonView } from '../components/JsonView';
+import { parseJSON } from '../utils';
 
 SyntaxHighlighter.registerLanguage('json', json);
 
 const JsonFormatterTool: React.FC = () => {
   const { theme } = useThemeStore();
+  const [mode, setMode] = useState<'text' | 'tree'>('text');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +28,7 @@ const JsonFormatterTool: React.FC = () => {
         return;
       }
 
-      const parsedJson = JSON.parse(jsonrepair(input));
+      const parsedJson = parseJSON(input);
       const formatted = JSON.stringify(parsedJson, null, indentSize);
       setOutput(formatted);
       setError(null);
@@ -70,7 +72,7 @@ const JsonFormatterTool: React.FC = () => {
         return;
       }
 
-      const parsedJson = JSON.parse(input);
+      const parsedJson = parseJSON(input);
       const minified = JSON.stringify(parsedJson);
       setOutput(minified);
       setError(null);
@@ -81,12 +83,44 @@ const JsonFormatterTool: React.FC = () => {
     }
   };
 
+  const renderOutput = () => {
+    if (error) {
+      return <div className="p-4 text-error-500">{error}</div>;
+    }
+    if (output) {
+      if (mode === 'text') {
+        return (
+          <SyntaxHighlighter
+            language="json"
+            style={theme === 'dark' ? darkStyle : lightStyle}
+            customStyle={{
+              margin: 0,
+              padding: '1rem',
+              background: 'transparent',
+              height: '100%',
+            }}
+          >
+            {output}
+          </SyntaxHighlighter>
+        );
+      }
+      return (
+        <JsonView data={JSON.parse(output)} isRoot />
+      );
+    }
+    return (
+      <div className="p-4 text-gray-500 dark:text-gray-400">
+        Formatted JSON will appear here...
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Controls */}
       <div className="flex flex-wrap gap-4">
         <div className="flex items-center space-x-4">
-          <label className="text-sm font-medium">Indent Size:</label>
+          <label className="text-sm font-medium text-nowrap">Indent Size:</label>
           <select
             value={indentSize}
             onChange={(e) => setIndentSize(Number(e.target.value))}
@@ -123,7 +157,7 @@ const JsonFormatterTool: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium">Input JSON:</label>
+          <label className="block text-sm font-medium py-[3px]">Input JSON:</label>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -136,41 +170,38 @@ const JsonFormatterTool: React.FC = () => {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <label className="block text-sm font-medium">Formatted Output:</label>
-            {output && (
-              <button
-                onClick={copyToClipboard}
-                className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center space-x-1"
-              >
-                {copied ? (
-                  <Check className="h-4 w-4 text-success-500" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
-                <span>{copied ? 'Copied!' : 'Copy'}</span>
-              </button>
-            )}
+            <div className="flex items-center space-x-2">
+              {output && (
+                <button
+                  onClick={copyToClipboard}
+                  className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center space-x-1"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-success-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                  <span>{copied ? 'Copied!' : 'Copy'}</span>
+                </button>
+              )}
+              <div className="border border-gray-200 dark:border-gray-800 rounded-full p-0.5 flex">
+                <button
+                  onClick={() => setMode('text')}
+                  className={`p-1 rounded-full ${mode === 'text' ? 'bg-primary-100 dark:bg-primary-900' : ''}`}
+                >
+                  <Code className="h-3 w-3" />
+                </button>
+                <button
+                  onClick={() => setMode('tree')}
+                  className={`p-1 rounded-full ${mode === 'tree' ? 'bg-primary-100 dark:bg-primary-900' : ''}`}
+                >
+                  <ListTree className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
           </div>
           <div className="relative h-[400px] rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 overflow-auto">
-            {error ? (
-              <div className="p-4 text-error-500">{error}</div>
-            ) : output ? (
-              <SyntaxHighlighter
-                language="json"
-                style={theme === 'dark' ? darkStyle : lightStyle}
-                customStyle={{
-                  margin: 0,
-                  padding: '1rem',
-                  background: 'transparent',
-                  height: '100%',
-                }}
-              >
-                {output}
-              </SyntaxHighlighter>
-            ) : (
-              <div className="p-4 text-gray-500 dark:text-gray-400">
-                Formatted JSON will appear here...
-              </div>
-            )}
+            {renderOutput()}
           </div>
         </div>
       </div>
